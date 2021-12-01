@@ -16,6 +16,9 @@ where (type = 'Printer')
 
 ====ЗАДАЧА #3
 
+select model, ram, screen
+from Laptop
+where (price > 1000)
 
 
 
