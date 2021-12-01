@@ -24,6 +24,9 @@ where (price > 1000)
 
 ====ЗАДАЧА #4
 
+select *
+from Printer
+where (color = 'y')
 
 
 
