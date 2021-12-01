@@ -5,13 +5,11 @@ from pc
 where (price < 500)
 
 
-
 ====ЗАДАЧА #2
 
 select DISTINCT maker
 from product
 where (type = 'Printer')
-
 
 
 ====ЗАДАЧА #3
@@ -21,7 +19,6 @@ from Laptop
 where (price > 1000)
 
 
-
 ====ЗАДАЧА #4
 
 select *
@@ -29,5 +26,8 @@ from Printer
 where (color = 'y')
 
 
-
 ====ЗАДАЧА #5
+
+select model,speed,hd
+from pc
+where (cd = '12x' or cd = '24x') and (price < 600)
