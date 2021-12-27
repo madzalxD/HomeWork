@@ -131,3 +131,213 @@ WHERE EXISTS (SELECT *
               WHERE pc.hd = p.hd AND 
                     pc.code <> p.code
               )
+
+-------------------НОВЫЕ ДЗ---------------
+16 номер
+
+SELECT DISTINCT A.model, B.model, A.speed, A.ram
+FROM PC AS A, PC B
+WHERE A.speed = B.speed and A.ram = B.ram and A.model > B.model
+
+
+
+
+
+17 номер
+
+SELECT DISTINCT p.type, l.model, l.speed
+FROM Product p, Laptop l
+WHERE l.speed < (SELECT MIN (speed) 
+                 FROM PC
+                 ) AND 
+      p.type = 'laptop'
+
+
+18 номер 
+
+select maker, price
+FROM printer
+JOIN product ON product.model = printer.model
+where price = (select min(price) price
+from printer
+where color = 'y') and color = 'y'
+group by maker, price
+
+
+
+
+19 номер
+
+
+select product.maker, sum(laptop.screen) / count(laptop.model)
+from product, laptop
+where product.type = 'Laptop'
+and product.model = laptop.model
+group by product.maker
+
+
+
+20 номер
+
+
+select product.maker, count(*)
+from product
+where product.type = 'PC'
+group by product.maker
+having count(*) >= 3
+
+
+
+-------------------------------
+
+21 номер
+
+SELECT DISTINCT maker, max(price)
+FROM Product INNER JOIN 
+ PC ON PC.model = Product.model
+group by maker
+
+
+
+
+22 номер
+
+select speed, avg(price)
+from pc
+where speed > 600
+group by speed
+
+
+
+
+23 номер
+
+
+select maker
+from pc
+join product ON
+product.model = pc.model
+where speed >= 750 and maker IN(SELECT maker
+from Laptop JOIN product ON product.model = laptop.model
+where speed >=750)
+group by maker
+
+
+ WWWOWOWOWOWOWWOW
+ ?????
+
+24 номер
+
+select distinct product.model
+from product, pc, laptop, printer
+where product.model in(pc.model, laptop.model, printer.model)
+and pc.price = (select max(pcc.price) from pc pcc)
+and laptop.price = (select max(l.price) from laptop l)
+and printer.price = (select max(pr.price) from printer pr)
+and (
+(pc.price >= laptop.price and pc.price >= printer.price
+and product.model = pc.model)
+or
+(laptop.price >= pc.price and laptop.price >= printer.price
+and product.model = laptop.model)
+or
+(printer.price >= laptop.price and printer.price >= pc.price
+and product.model = printer.model)
+)
+
+
+
+
+25 номер
+
+select distinct product.maker
+from product, pc
+where product.type = 'PC' and product.model = pc.model and pc.ram = (select min(pcc.ram)
+from pc pcc
+where pcc.ram <> 0) and pc.speed = (select max(pccc.speed) from pc pccc
+where pccc.ram = (select min(pcc.ram)
+from pc pcc
+where pcc.ram <> 0)) and exists(select 'x' from product p
+where p.type = 'Printer' and p.maker = product.maker)
+
+
+
+SQL-ACADEMY
+
+#1
+
+select name
+from Passenger
+
+
+#2
+
+select name
+from Company
+
+
+#3
+
+
+select *
+from Trip
+where town_from = 'Moscow'
+
+#4
+
+select name
+from Passenger
+WHERE name like "%man"
+
+
+#5
+
+SELECT COUNT(*) AS count
+FROM Trip
+WHERE plane = 'TU-134';
+
+#6
+
+SELECT DISTINCT name 
+FROM Company
+JOIN Trip ON Company.id = Trip.company
+WHERE plane = 'Boeing';
+
+
+
+#7
+
+select DISTINCT plane
+from Trip
+where town_to = 'Moscow'
+
+
+
+#8
+
+SELECT town_to, TIMEDIFF(time_in, time_out) AS flight_time
+FROM Trip
+WHERE town_from = 'Paris';
+
+
+
+#9
+
+SELECT DISTINCT name 
+FROM Company
+JOIN Trip
+ ON Company.id=Trip.company
+WHERE town_from = 'Vladivostok';
+
+
+
+
+#10
+
+SELECT * FROM Trip
+WHERE time_out
+  BETWEEN
+    '1900-01-01 10:00:00'
+AND
+    '1900-01-01 14:00:00';
+
