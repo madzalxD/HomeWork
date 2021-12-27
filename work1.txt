@@ -228,22 +228,30 @@ group by maker
 
 24 номер
 
-select distinct product.model
-from product, pc, laptop, printer
-where product.model in(pc.model, laptop.model, printer.model)
-and pc.price = (select max(pcc.price) from pc pcc)
-and laptop.price = (select max(l.price) from laptop l)
-and printer.price = (select max(pr.price) from printer pr)
-and (
-(pc.price >= laptop.price and pc.price >= printer.price
-and product.model = pc.model)
-or
-(laptop.price >= pc.price and laptop.price >= printer.price
-and product.model = laptop.model)
-or
-(printer.price >= laptop.price and printer.price >= pc.price
-and product.model = printer.model)
-)
+SELECT model
+FROM (
+ SELECT model, price
+ FROM pc
+ UNION
+ SELECT model, price
+ FROM Laptop
+ UNION
+ SELECT model, price
+ FROM Printer
+) x
+WHERE price = (
+ SELECT MAX(price)
+ FROM (
+  SELECT price
+  FROM pc
+  UNION
+  SELECT price
+  FROM Laptop
+  UNION
+  SELECT price
+  FROM Printer
+  ) x2
+ );
 
 
 
