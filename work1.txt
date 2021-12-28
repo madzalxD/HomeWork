@@ -349,3 +349,8 @@ WHERE time_out
 AND
     '1900-01-01 14:00:00';
 
+#11
+
+SELECT name 
+FROM Passenger
+WHERE LENGTH(name) = (SELECT MAX(LENGTH(name)) FROM Passenger);
