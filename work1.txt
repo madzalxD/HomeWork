@@ -473,6 +473,8 @@ select ship, battle from outcomes where result = 'sunk'
 
 43 number
 
+select DISTINCT name from battles
+where year ([date]) not in (select launched from ships where launched is not null)
 
 
 
