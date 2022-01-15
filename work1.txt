@@ -269,6 +269,212 @@ where pcc.ram <> 0)) and exists(select 'x' from product p
 where p.type = 'Printer' and p.maker = product.maker)
 
 
+26 number
+
+
+SELECT AVG(price) FROM (
+SELECT price FROM pc WHERE model IN
+(SELECT model FROM product WHERE maker='A' AND type='PC')
+UNION ALL
+SELECT price FROM laptop WHERE model IN
+(SELECT model FROM product WHERE maker='A' AND type='Laptop')
+) as prod
+
+
+27 number
+select maker, AVG(hd) Avg_hd
+from pc
+join product on product.model = pc.model
+where maker IN(
+select distinct maker
+from product
+where type = 'printer'
+) group by maker
+
+
+
+28 number
+
+select COUNT(maker) qty from (
+select maker
+from product
+group by maker 
+having COUNT(*) = 1
+) x
+
+
+
+29 number
+select income_o.point, income_o.[date], inc, out 
+from
+income_o left join outcome_o on outcome_o.point = income_o.point
+and outcome_o.[date] = income_o.[date]
+
+union
+select outcome_o.point, outcome_o.[date], inc, out 
+from
+income_o right join outcome_o on outcome_o.point = income_o.point
+and outcome_o.[date] = income_o.[date]
+
+
+
+30 number
+
+select point, [date], sum(outs), sum(incs) FROM (
+select point, [date], sum(out) outs, null incs
+from
+outcome
+group by point, [date]
+union
+select point, [date], null, sum(inc)
+from
+income
+group by point, [date]
+) this_table GROUP BY point, [date]
+
+
+
+31 number
+
+select class, country from classes
+where bore >= 16
+
+
+
+
+
+32 number
+
+select country, cast(AVG(POWER(bore, 3) / 2) as DECIMAL(6,2)) weight from (
+select country, bore, name
+from classes join ships on classes.class = ships.class
+union 
+select country, bore, ship
+from classes join outcomes on class = ship
+where ship not in (select name from ships)
+) this_table group by country
+
+
+
+
+33 number
+
+select ship
+from outcomes
+where battle = 'North Atlantic' and result ='sunk'
+
+
+
+
+34 number
+
+select name from(
+select name, type, launched, displacement from 
+classes join ships on classes.class = ships.class
+union 
+select ship, type, null, displacement from classes join outcomes on class = ship
+) this_table where type = 'bb' and launched is not null and launched >= 1922
+and displacement > 35000
+
+
+
+
+35 number
+
+select model, type
+from product
+where model not like '%[^0-9]%' or model not like '%[^a-z]%'
+
+
+
+36 number
+
+select name from (
+select name from classes join ships ON classes.class = ships.class
+union
+select ship from outcomes join classes on class = ship
+) x where name in (select class from classes)
+
+
+
+
+37 number
+
+select class FROM(
+select class, count(name) qty FROM(
+select classes.class, name
+from classes join
+ships on classes.class = ships.class
+union
+select class, ship
+from classes join outcomes
+on class = ship
+) this_table group by class having count(*) = 1
+) this_table2
+
+
+
+38 number
+
+select distinct country from (
+select country, type, ships.class
+from classes
+join ships on classes.class = ships.class
+where type = 'bb'
+union
+select country, type, class from classes join outcomes on class = ship where type = 'bb' and country IN (select country from classes join outcomes on class = ship where type = 'bc')
+) x
+intersect 
+select distinct country from classes where type = 'bc'
+
+
+
+
+39 number
+
+select distinct ship from(
+select ship, result, [date] from outcomes join battles bat on battle=name
+where result = 'damaged' and ship IN (select ship from outcomes join battles on battle = name where bat.[date] < battles.[date])
+) x
+
+
+
+
+40 number
+
+select maker, type from product where maker IN(
+select maker from(
+select maker, type from product group by maker, type
+) x group by maker having count(*) = 1
+) group by maker, type having count(*) > 1
+
+
+
+
+41 number
+
+select maker, case 
+when max(case when price is null then 1 else 0 end) = 0 
+then max(price) end price from(
+select maker, price from product join pc on pc.model = product.model
+union
+select maker, price from product join laptop on laptop.model = product.model
+union
+select maker, price from product join printer on printer.model = product.model
+) x group by maker
+
+
+
+42 number
+
+select ship, battle from outcomes where result = 'sunk'
+
+
+
+43 number
+
+
+
 
 SQL-ACADEMY
 
