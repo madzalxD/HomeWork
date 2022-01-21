@@ -562,3 +562,103 @@ AND
 SELECT name 
 FROM Passenger
 WHERE LENGTH(name) = (SELECT MAX(LENGTH(name)) FROM Passenger);
+
+#12
+
+SELECT trip, COUNT(passenger) as count  
+FROM Pass_in_trip
+GROUP BY trip;
+
+
+
+
+
+#13
+
+SELECT name 
+FROM Passenger
+GROUP BY name
+HAVING COUNT(name) > 1;
+
+
+
+#14
+
+SELECT DISTINCT town_to 
+FROM Trip
+JOIN Pass_in_trip
+    ON Trip.id=Pass_in_trip.trip
+JOIN Passenger
+    ON Pass_in_trip.passenger=Passenger.id
+WHERE name = 'Bruce Willis';
+
+
+
+#15
+
+select DISTINCT time_in
+from Trip
+JOIN Pass_in_trip
+    ON Trip.id=Pass_in_trip.trip
+JOIN Passenger
+    ON Pass_in_trip.passenger=Passenger.id
+WHERE name = 'Steve Martin' and town_to = 'London'
+
+
+
+#16
+
+SELECT name, COUNT(*) AS count  
+FROM Passenger
+JOIN Pass_in_trip
+    ON Passenger.id=Pass_in_trip.passenger
+GROUP BY passenger
+HAVING COUNT(trip) > 0
+ORDER BY COUNT(trip) DESC, name;
+
+
+
+#17
+
+SELECT member_name, status, SUM(amount*unit_price) AS costs 
+FROM FamilyMembers
+JOIN Payments
+    ON FamilyMembers.member_id=Payments.family_member
+WHERE YEAR(date) = 2005
+GROUP BY member_name, status;
+
+
+
+#18
+
+SELECT member_name
+FROM FamilyMembers 
+WHERE birthday = (SELECT MIN(birthday) FROM FamilyMembers);
+
+
+
+#19
+
+SELECT DISTINCT status
+FROM FamilyMembers
+JOIN Payments
+    ON FamilyMembers.member_id=Payments.family_member
+JOIN Goods
+    ON  Payments.good=Goods.good_id
+WHERE good_name = 'potato';
+
+
+
+#20
+
+
+SELECT fm.status, fm.member_name, SUM(p.amount*p.unit_price) AS costs
+FROM FamilyMembers AS fm
+JOIN Payments AS p
+    ON fm.member_id=p.family_member
+JOIN Goods AS g
+    ON p.good=g.good_id
+JOIN GoodTypes AS gt
+    ON g.type=gt.good_type_id
+WHERE good_type_name = 'entertainment'
+GROUP BY fm.status, fm.member_name;
